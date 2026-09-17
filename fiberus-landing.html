@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiberUs — your 4pm slump isn't a personality trait</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1F1230;
+    --bg-2: #291940;
+    --ink: #FBF6EE;
+    --ink-dim: #C9BEDD;
+    --lime: #D4FF3D;
+    --coral: #FF6B7A;
+    --yellow: #FFC93C;
+    --card: #2B1A42;
+    --border: rgba(251,246,238,0.14);
+    --radius: 22px;
+  }
+  :root:not([data-theme="light"]){
+    --bg: #1F1230;
+    --ink: #FBF6EE;
+  }
+  :root[data-theme="dark"]{
+    --bg: #1F1230;
+    --ink: #FBF6EE;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--lime); color:#1F1230; }
+  a{color:inherit;}
+  .wrap{ max-width:640px; margin:0 auto; padding:0 24px; }
+  img{max-width:100%;}
+
+  /* ---------- Marquee ---------- */
+  .marquee-band{
+    background:var(--lime);
+    color:#1F1230;
+    overflow:hidden;
+    white-space:nowrap;
+    padding:9px 0;
+    border-bottom:3px solid var(--ink);
+  }
+  .marquee-track{
+    display:inline-block;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:0.02em;
+    animation:scroll 22s linear infinite;
+  }
+  @keyframes scroll{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+  .marquee-track span{ margin-right:28px; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:64px 0 40px;
+    text-align:center;
+    position:relative;
+  }
+  .eyebrow{
+    display:inline-block;
+    font-size:15px;
+    color:var(--ink-dim);
+    margin-bottom:14px;
+    transform:rotate(-2deg);
+  }
+  .hero h1{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:clamp(34px, 8vw, 54px);
+    line-height:1.06;
+    margin:0 0 20px;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 .pop{
+    display:inline-block;
+    color:var(--bg);
+    background:var(--coral);
+    padding:2px 12px;
+    border-radius:10px;
+    transform:rotate(-1.5deg);
+  }
+  .hero p{
+    font-size:17px;
+    color:var(--ink-dim);
+    max-width:460px;
+    margin:0 auto 30px;
+    line-height:1.55;
+  }
+  .stickers{
+    position:relative;
+    height:0;
+  }
+  .sticker{
+    position:absolute;
+    font-size:34px;
+    animation:bob 4.5s ease-in-out infinite;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,0.35));
+  }
+  .s1{ top:-210px; left:2%; animation-delay:0s; }
+  .s2{ top:-150px; right:4%; animation-delay:1.2s; }
+  .s3{ top:20px; left:8%; animation-delay:2.1s; font-size:26px; }
+  .s4{ top:150px; right:10%; animation-delay:0.6s; font-size:26px; }
+  @keyframes bob{
+    0%,100%{ transform:translateY(0) rotate(-4deg); }
+    50%{ transform:translateY(-12px) rotate(4deg); }
+  }
+
+  .btn{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:17px;
+    border:none;
+    cursor:pointer;
+    border-radius:100px;
+    padding:16px 30px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:transform 0.15s ease;
+  }
+  .btn:active{ transform:scale(0.96); }
+  .btn:focus-visible{ outline:3px solid var(--lime); outline-offset:3px; }
+  .btn-primary{ background:var(--lime); color:#1F1230; }
+  .btn-primary:hover{ transform:translateY(-2px); }
+  .btn-ghost{ background:transparent; color:var(--ink); border:2px solid var(--border); }
+
+  .scroll-hint{
+    display:block;
+    margin-top:14px;
+    font-size:13px;
+    color:var(--ink-dim);
+  }
+
+  /* ---------- Sections ---------- */
+  section{ padding:56px 0; border-top:1px solid var(--border); }
+  .kicker{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:clamp(24px,5.5vw,32px);
+    margin:0 0 8px;
+    text-align:center;
+  }
+  .kicker-sub{
+    text-align:center;
+    color:var(--ink-dim);
+    font-size:15px;
+    margin:0 0 32px;
+  }
+
+  /* ---------- Quiz ---------- */
+  .quiz-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:28px 24px;
+    min-height:220px;
+  }
+  .quiz-progress{
+    display:flex;
+    gap:6px;
+    margin-bottom:20px;
+  }
+  .quiz-progress i{
+    flex:1;
+    height:5px;
+    border-radius:4px;
+    background:var(--border);
+  }
+  .quiz-progress i.done{ background:var(--lime); }
+  .quiz-q{
+    font-family:'Baloo 2',sans-serif;
+    font-size:20px;
+    font-weight:600;
+    margin:0 0 18px;
+  }
+  .quiz-opts{ display:flex; flex-direction:column; gap:10px; }
+  .quiz-opt{
+    text-align:left;
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    color:var(--ink);
+    padding:14px 16px;
+    border-radius:14px;
+    font-size:15px;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    transition:border-color 0.15s ease, transform 0.1s ease;
+  }
+  .quiz-opt:hover{ border-color:var(--lime); transform:translateX(3px); }
+  .quiz-opt:focus-visible{ outline:2px solid var(--lime); outline-offset:2px; }
+
+  .quiz-result{ text-align:center; }
+  .quiz-result .badge{
+    display:inline-block;
+    font-family:'Baloo 2',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    background:var(--yellow);
+    color:#1F1230;
+    padding:8px 18px;
+    border-radius:12px;
+    transform:rotate(-1deg);
+    margin-bottom:14px;
+  }
+  .quiz-result p{ color:var(--ink-dim); font-size:15px; line-height:1.6; margin:0 0 20px; }
+
+  /* ---------- Reveal / price flip ---------- */
+  .reveal-copy{
+    text-align:center;
+    color:var(--ink-dim);
+    font-size:16px;
+    line-height:1.65;
+    max-width:480px;
+    margin:0 auto 32px;
+  }
+  .flip-wrap{ display:flex; justify-content:center; margin-bottom:8px; }
+  .flip-card{
+    width:240px;
+    height:150px;
+    perspective:1000px;
+    cursor:pointer;
+  }
+  .flip-inner{
+    position:relative;
+    width:100%; height:100%;
+    transition:transform 0.6s cubic-bezier(.2,.8,.2,1);
+    transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-inner{ transform:rotateY(180deg); }
+  .flip-face{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border-radius:18px;
+    backface-visibility:hidden;
+    font-family:'Baloo 2',sans-serif;
+  }
+  .flip-front{
+    background:var(--card);
+    border:2px dashed var(--border);
+  }
+  .flip-front .q{ font-size:30px; color:var(--ink-dim); }
+  .flip-front .l{ font-size:14px; color:var(--ink-dim); margin-top:6px; }
+  .flip-back{
+    background:var(--coral);
+    color:#1F1230;
+    transform:rotateY(180deg);
+  }
+  .flip-back .p{ font-size:34px; font-weight:800; }
+  .flip-back .l{ font-size:13px; margin-top:4px; font-family:'Inter',sans-serif; }
+  .flip-hint{ text-align:center; font-size:13px; color:var(--ink-dim); margin-top:10px; }
+
+  /* ---------- Waitlist ---------- */
+  .waitlist-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:30px 24px;
+  }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px; }
+  .chip{
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    color:var(--ink-dim);
+    padding:9px 14px;
+    border-radius:100px;
+    font-size:13.5px;
+    cursor:pointer;
+    transition:all 0.15s ease;
+  }
+  .chip.active{ background:var(--lime); color:#1F1230; border-color:var(--lime); font-weight:600; }
+  .chip:focus-visible{ outline:2px solid var(--lime); outline-offset:2px; }
+
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:13px; color:var(--ink-dim); margin-bottom:6px; }
+  .field input{
+    width:100%;
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    color:var(--ink);
+    padding:13px 14px;
+    border-radius:12px;
+    font-size:15px;
+    font-family:'Inter',sans-serif;
+  }
+  .field input:focus-visible{ outline:2px solid var(--lime); outline-offset:1px; }
+  .field input::placeholder{ color:#8A7FA3; }
+
+  .waitlist-submitted{ text-align:center; }
+  .waitlist-submitted .big{ font-size:44px; margin-bottom:8px; }
+  .waitlist-submitted h3{ font-family:'Baloo 2',sans-serif; margin:0 0 6px; }
+  .waitlist-submitted p{ color:var(--ink-dim); font-size:14.5px; }
+
+  /* ---------- FAQ ---------- */
+  .faq-item{ margin-bottom:14px; }
+  .faq-q{
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    border-radius:16px 16px 4px 16px;
+    padding:12px 16px;
+    font-size:14.5px;
+    font-weight:600;
+    max-width:80%;
+    margin-left:auto;
+  }
+  .faq-a{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px 16px 16px 4px;
+    padding:12px 16px;
+    font-size:14.5px;
+    color:var(--ink-dim);
+    max-width:85%;
+    margin-top:8px;
+    line-height:1.55;
+  }
+
+  footer{
+    text-align:center;
+    padding:36px 24px 48px;
+    font-size:13px;
+    color:var(--ink-dim);
+  }
+
+  #confetti-canvas{
+    position:fixed; inset:0; pointer-events:none; z-index:50;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .marquee-track, .sticker{ animation:none !important; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="marquee-band">
+  <div class="marquee-track">
+    <span>MUMBAI'S GUT IS NOT OKAY </span>
+    <span>FIBER INTAKE SO LOW EVEN YOUR WIFI HAS BETTER SIGNAL 📶</span>
+    <span>STILL DECIDING WHAT TO CALL THIS THING</span>
+    <span>TESTING IN MUMBAI SOON</span>
+    <span>MUMBAI'S GUT IS NOT OKAY 🫠</span>
+    <span>FIBER INTAKE SO LOW EVEN YOUR WIFI HAS BETTER SIGNAL 📶</span>
+    <span>STILL DECIDING WHAT TO CALL THIS THING</span>
+    <span>TESTING IN MUMBAI SOON</span>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section class="hero" style="border-top:none;">
+    <div class="stickers" aria-hidden="true">
+      <span class="sticker s1">🫠</span>
+      <span class="sticker s2">🍪</span>
+      <span class="sticker s3">😵‍💫</span>
+      <span class="sticker s4">✨</span>
+    </div>
+    <span class="eyebrow">psst pssst, mumbai.</span>
+    <h1>Your 4pm slump isn't a <span class="pop">personality trait.</span></h1>
+    <p>It might just be your gut, quietly begging for fiber.</br> We're building something for that. </br>Still figuring out what to call it.</p>
+    <button class="btn btn-primary" id="scrollToQuiz">wait, tell me more</button>
+    <span class="scroll-hint">takes 30 seconds, we promise</span>
+  </section>
+
+  <section id="quiz-section">
+    <h2 class="kicker">quick gut check</h2>
+    <p class="kicker-sub">3 taps. no email needed. brutally honest results.</p>
+    <div class="quiz-card" id="quizCard"></div>
+  </section>
+
+  <section id="reveal-section">
+    <h2 class="kicker">here's the (still nameless) thing</h2>
+    <p class="reveal-copy">A ridiculously convenient fiber snack that doesn't taste like punishment. That's the whole pitch. We're still deciding the exact format  Gummies? cookie? bar? Spread? or something weirder?  and honestly, your feedback below decides that part.</p>
+    <div class="flip-wrap">
+      <div class="flip-card" id="priceFlip">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <span class="q">₹??</span>
+            <span class="l">guess the price</span>
+          </div>
+          <div class="flip-face flip-back">
+            <span class="p">₹50</span>
+            <span class="l">for the launch pack, yes really</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="flip-hint">tap the card</p>
+  </section>
+
+  <section id="waitlist-section">
+    <h2 class="kicker">in or in?</h2>
+    <p class="kicker-sub">no spam, no "unlock your discount" nonsense. just a heads up when it's real.</p>
+    <div class="waitlist-card">
+      <div id="waitlistForm">
+        <p style="font-size:13px;color:var(--ink-dim);margin:0 0 12px;">what brought you here? (pick what fits)</p>
+        <div class="chip-row" id="chipRow">
+          <button class="chip" data-chip="bloating / digestion">bloating / digestion</button>
+          <button class="chip" data-chip="4pm energy crash">4pm energy crash</button>
+          <button class="chip" data-chip="just want a healthier snack">just want a healthier snack</button>
+          <button class="chip" data-chip="here for the memes tbh">here for the memes tbh</button>
+        </div>
+        <div class="field">
+          <label for="nameInput">what should we call you</label>
+          <input type="text" id="nameInput" placeholder="your name">
+        </div>
+        <button class="btn btn-primary" id="joinBtn" style="width:100%;justify-content:center;">count me in on whatsapp</button>
+        <p style="font-size:12px;color:var(--ink-dim);text-align:center;margin:10px 0 0;">opens a WhatsApp chat with us, no form-filling into a void</p>
+      </div>
+      <div class="waitlist-submitted" id="waitlistDone" style="display:none;">
+        <div class="big">🎉</div>
+        <h3>opening whatsapp...</h3>
+        <p>send the message and you're officially on the list.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq-section">
+    <h2 class="kicker">questions, answered</h2>
+    <div style="margin-top:24px;">
+      <div class="faq-item">
+        <div class="faq-q">wait what even is this</div>
+        <div class="faq-a">A Mumbai-made snack that quietly packs in the fiber most of us are missing. Still shaping the exact format, this whole page is us thinking out loud.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">is this a medicine or supplement thing</div>
+        <div class="faq-a">Nope. Just food. No pills, no lab coats, no "cures anything" claims here.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">when's it launching</div>
+        <div class="faq-a">Testing in Mumbai soon. Join the list above and you'll know before anyone else does.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">who's behind this</div>
+        <div class="faq-a">A very caffeinated founder and a professor who actually knows food science. Trying to do this properly, not just vibes.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  FiberUs · Mumbai · built by people who also forget to eat vegetables
+</footer>
+
+<canvas id="confetti-canvas"></canvas>
+
+<script>
+(function(){
+
+  document.getElementById('scrollToQuiz').addEventListener('click', function(){
+    document.getElementById('quiz-section').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  /* ---------------- Quiz ---------------- */
+  var questions = [
+    {
+      q: "when does your energy usually crash?",
+      opts: ["right after lunch","around 4pm, like clockwork","honestly? all day","energy? what's that"]
+    },
+    {
+      q: "your go-to office snack is...",
+      opts: ["vending machine chips","whatever's on my desk","I forget to eat until I'm starving","I actually pack fruit (flex)"]
+    },
+    {
+      q: "how's your stomach feeling right now, honestly",
+      opts: ["fine, why","a little bloated tbh","actively plotting against me","we don't talk about it"]
+    }
+  ];
+
+  var results = [
+    { badge:"The 4pm Ghost", text:"You run like a champ till lunch, then vanish into a fog of chips and regret. A fiber plot twist might help." },
+    { badge:"The Silent Bloater", text:"You look fine. Inside, it's chaos. We see you, and we're not judging." },
+    { badge:"The Snack Roulette Player", text:"Vending machine loyalty card, when? Your snacking is chaos and your gut knows it." },
+    { badge:"Suspiciously Fine", text:"Either you're lying or you're one of the rare few actually hitting your fiber target. Respect either way." }
+  ];
+
+  var current = 0;
+  var score = 0;
+  var quizBadge = null;
+
+  function renderQuiz(){
+    var card = document.getElementById('quizCard');
+    if(current < questions.length){
+      var qd = questions[current];
+      var progressHtml = '';
+      for(var p=0;p<questions.length;p++){
+        progressHtml += '<i class="'+(p<current?'done':'')+'"></i>';
+      }
+      var optsHtml = '';
+      qd.opts.forEach(function(opt, idx){
+        optsHtml += '<button class="quiz-opt" data-idx="'+idx+'">'+opt+'</button>';
+      });
+      card.innerHTML = '<div class="quiz-progress">'+progressHtml+'</div>'+
+                        '<p class="quiz-q">'+qd.q+'</p>'+
+                        '<div class="quiz-opts">'+optsHtml+'</div>';
+      var btns = card.querySelectorAll('.quiz-opt');
+      btns.forEach(function(btn){
+        btn.addEventListener('click', function(){
+          score += parseInt(this.getAttribute('data-idx'),10);
+          current++;
+          renderQuiz();
+        });
+      });
+    } else {
+      var idx = Math.min(Math.floor(score/3), results.length-1);
+      var r = results[idx];
+      quizBadge = r.badge;
+      card.innerHTML = '<div class="quiz-result">'+
+        '<span class="badge">'+r.badge+'</span>'+
+        '<p>'+r.text+'</p>'+
+        '<button class="btn btn-ghost" id="toReveal">see what we\'re building</button>'+
+        '</div>';
+      document.getElementById('toReveal').addEventListener('click', function(){
+        document.getElementById('reveal-section').scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    }
+  }
+  renderQuiz();
+
+  /* ---------------- Price flip ---------------- */
+  document.getElementById('priceFlip').addEventListener('click', function(){
+    this.classList.toggle('flipped');
+  });
+
+  /* ---------------- Chips ---------------- */
+  var chipRow = document.getElementById('chipRow');
+  chipRow.querySelectorAll('.chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      this.classList.toggle('active');
+    });
+  });
+
+  /* ---------------- Waitlist submit -> WhatsApp + confetti ---------------- */
+  var WHATSAPP_NUMBER = "917887065511";
+
+  document.getElementById('joinBtn').addEventListener('click', function(){
+    var name = document.getElementById('nameInput').value.trim();
+    var selectedChips = [];
+    chipRow.querySelectorAll('.chip.active').forEach(function(c){
+      selectedChips.push(c.getAttribute('data-chip'));
+    });
+
+    var lines = ["Hey! I'm in for FiberUs 👋"];
+    if(name){ lines.push("Name: " + name); }
+    if(selectedChips.length){ lines.push("What brought me here: " + selectedChips.join(", ")); }
+    if(quizBadge){ lines.push("Gut check result: " + quizBadge); }
+    var message = lines.join("\n");
+
+    var waLink = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+
+    document.getElementById('waitlistForm').style.display = 'none';
+    document.getElementById('waitlistDone').style.display = 'block';
+    burstConfetti();
+
+    window.open(waLink, '_blank');
+  });
+
+  /* ---------------- Confetti (single orchestrated moment) ---------------- */
+  function burstConfetti(){
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduced) return;
+    var canvas = document.getElementById('confetti-canvas');
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width = window.innerWidth;
+    var h = canvas.height = window.innerHeight;
+    var colors = ['#D4FF3D','#FF6B7A','#FFC93C','#FBF6EE'];
+    var particles = [];
+    for(var i=0;i<70;i++){
+      particles.push({
+        x: w/2 + (Math.random()-0.5)*120,
+        y: h*0.55,
+        vx: (Math.random()-0.5)*9,
+        vy: -(Math.random()*9+4),
+        size: Math.random()*6+4,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        rot: Math.random()*360,
+        vrot: (Math.random()-0.5)*12
+      });
+    }
+    var start = Date.now();
+    function frame(){
+      var elapsed = Date.now()-start;
+      ctx.clearRect(0,0,w,h);
+      particles.forEach(function(pt){
+        pt.vy += 0.28;
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.rot += pt.vrot;
+        ctx.save();
+        ctx.translate(pt.x, pt.y);
+        ctx.rotate(pt.rot*Math.PI/180);
+        ctx.fillStyle = pt.color;
+        ctx.fillRect(-pt.size/2, -pt.size/2, pt.size, pt.size*0.6);
+        ctx.restore();
+      });
+      if(elapsed < 2200){
+        requestAnimationFrame(frame);
+      } else {
+        ctx.clearRect(0,0,w,h);
+      }
+    }
+    frame();
+  }
+
+})();
+</script>
+
+</body>
+</html>
