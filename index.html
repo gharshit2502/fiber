@@ -491,9 +491,13 @@
     { badge:"Suspiciously Fine", text:"Either you're lying or you're one of the rare few actually hitting your fiber target. Respect either way." }
   ];
 
-  var current = 0;
-  var score = 0;
-  var quizBadge = null;
+  // var current = 0;
+  // var score = 0;
+  // var quizBadge = null;
+var current = 0;
+var score = 0;
+var quizBadge = null;
+var answers = [];
 
   function renderQuiz(){
     var card = document.getElementById('quizCard');
@@ -513,9 +517,14 @@
       var btns = card.querySelectorAll('.quiz-opt');
       btns.forEach(function(btn){
         btn.addEventListener('click', function(){
-          score += parseInt(this.getAttribute('data-idx'),10);
-          current++;
-          renderQuiz();
+          // score += parseInt(this.getAttribute('data-idx'),10);
+          // current++;
+          // renderQuiz();
+        var selectedIndex = parseInt(this.getAttribute('data-idx'), 10);
+        answers.push(questions[current].opts[selectedIndex]);
+        score += selectedIndex;
+        current++;
+        renderQuiz();
         });
       });
     } else {
@@ -549,28 +558,106 @@
 
   /* ---------------- Waitlist submit -> WhatsApp + confetti ---------------- */
   var WHATSAPP_NUMBER = "917887065511";
+  var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyYeRTpAOVozdxeRytFE-u8b6vvfw1-SCdzmYo5R_ZyqWiJHta8reTxQ39ITuGnAcp/exec";
 
+  // document.getElementById('joinBtn').addEventListener('click', function(){
+  //   var name = document.getElementById('nameInput').value.trim();
+  //   var selectedChips = [];
+  //   chipRow.querySelectorAll('.chip.active').forEach(function(c){
+  //     selectedChips.push(c.getAttribute('data-chip'));
+  //   });
+
+  //   var lines = ["Hey! I'm in for FiberUs 👋"];
+  //   if(name){ lines.push("Name: " + name); }
+  //   if(selectedChips.length){ lines.push("What brought me here: " + selectedChips.join(", ")); }
+  //   if(quizBadge){ lines.push("Gut check result: " + quizBadge); }
+  //   var message = lines.join("\n");
+
+  //   var waLink = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+
+  //   document.getElementById('waitlistForm').style.display = 'none';
+  //   document.getElementById('waitlistDone').style.display = 'block';
+  //   burstConfetti();
+
+  //   window.open(waLink, '_blank');
+  // });
   document.getElementById('joinBtn').addEventListener('click', function(){
-    var name = document.getElementById('nameInput').value.trim();
-    var selectedChips = [];
-    chipRow.querySelectorAll('.chip.active').forEach(function(c){
-      selectedChips.push(c.getAttribute('data-chip'));
-    });
 
-    var lines = ["Hey! I'm in for FiberUs 👋"];
-    if(name){ lines.push("Name: " + name); }
-    if(selectedChips.length){ lines.push("What brought me here: " + selectedChips.join(", ")); }
-    if(quizBadge){ lines.push("Gut check result: " + quizBadge); }
-    var message = lines.join("\n");
+  var name = document.getElementById('nameInput').value.trim();
 
-    var waLink = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+  var selectedChips = [];
 
+  chipRow.querySelectorAll('.chip.active').forEach(function(c){
+    selectedChips.push(c.getAttribute('data-chip'));
+  });
+
+  var lines = ["Hey! I'm in for FiberUs 👋"];
+
+  if(name){
+    lines.push("Name: " + name);
+  }
+
+  if(selectedChips.length){
+    lines.push(
+      "What brought me here: " + selectedChips.join(", ")
+    );
+  }
+
+  if(quizBadge){
+    lines.push("Gut check result: " + quizBadge);
+  }
+
+  console.log("Answers:", lines);
+
+  var message = lines.join("\n");
+
+  // Send data to Google Sheets
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      name: name,
+      reasons: selectedChips.join(", "),
+      quizResult: quizBadge || "",
+      q1: answers[0] || "",
+      q2: answers[1] || "",
+      q3: answers[2] || "",
+      source: "FiberUs Website"
+    })
+  })
+  .then(function(response){
+    return response.json();
+  })
+  .then(function(data){
+
+    console.log("Google Sheet response:", data);
+
+    // Show success state
     document.getElementById('waitlistForm').style.display = 'none';
     document.getElementById('waitlistDone').style.display = 'block';
+
     burstConfetti();
 
+    // Open WhatsApp
+    var waLink =
+      "https://wa.me/" +
+      WHATSAPP_NUMBER +
+      "?text=" +
+      encodeURIComponent(message);
+
     window.open(waLink, '_blank');
+
+  })
+  .catch(function(error){
+
+    console.error("Google Sheet error:", error);
+
+    alert(
+      "Something went wrong while submitting. Please try again."
+    );
+
   });
+
+});
 
   /* ---------------- Confetti (single orchestrated moment) ---------------- */
   function burstConfetti(){
