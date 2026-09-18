@@ -582,6 +582,14 @@
       /* justify-content: center; */
     }
 
+    .radio-group2 {
+      display: flex;
+      /* flex-direction: row; */
+      gap: 10px;
+      flex-wrap: wrap;
+      /* justify-content: center; */
+    }
+
     .radio-option {
       display: flex;
       /* align-items: center;
@@ -724,26 +732,56 @@
 
 
           <div class="field" id="1">
-            <label>If there was an easy, tasty way to close this gap daily, would you try it?</label>
+            <label>Now that you know it's ₹50 - still in?</label>
 
             <div class="radio-group">
               <label style="display: flex; justify-content: left !important;" class="radio-option">
-                <input type="radio" name="choice" value="Yes definitely">
-                <p>Yupp!</p>
+                <input type="radio" name="choice" value="Yeah, take my money">
+                <p>Yeah, take my money </p>
               </label>
 
               <label style="display: flex; justify-content: left !important;" class="radio-option">
-                <input type="radio" name="choice" value="Maybe">
-                <p for="choice">Mehh</p>
+                <input type="radio" name="choice" value="Maybe, depends">
+                <p for="choice">Maybe, depends</p>
               </label>
 
               <label style="display: flex; justify-content: left !important;" class="radio-option">
-                <input type="radio" name="choice" value="Not really">
-                <p>Nope</p>
+                <input type="radio" name="choice" value="Nah, not for me">
+                <p>Nah, not for me</p>
               </label>
 
             </div>
           </div>
+
+
+ <div class="field" id="2">
+            <label>Be honest -how often does this [bloating/energy crash] actually mess with your day</label>
+
+            <div class="radio-group2">
+              <label style="display: flex; justify-content: left !important;" class="radio-option">
+                <input type="radio" name="choice2" value="Basically Daily">
+                <p>Basically daily </p>
+              </label>
+
+              <label style="display: flex; justify-content: left !important;" class="radio-option">
+                <input type="radio" name="choice2" value="Couple times a week">
+                <p for="choice2">Couple times a week</p>
+              </label>
+
+              <label style="display: flex; justify-content: left !important;" class="radio-option">
+                <input type="radio" name="choice2" value="Rarely, I'm built different">
+                <p>Rarely, I'm built different</p>
+              </label>
+
+            </div>
+          </div>
+
+
+
+
+
+
+
 
 
           <div class="field">
@@ -893,7 +931,7 @@
 
       /* ---------------- Waitlist submit -> WhatsApp + confetti ---------------- */
       var WHATSAPP_NUMBER = "917887065511";
-      var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFllG-D7XeRUT2aIMrASPcx_2ftiN0pjMHg1OVRvd9SYWMYpTuM7rEPRq-qvbUVmDT/exec"
+      var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8FNf747Dyi46XmbcS_6g4Uf2h1-Z-deTdIj1jmOvskJemtZsaAPF2O0Tg8zUm6-FL/exec";
       // document.getElementById('joinBtn').addEventListener('click', function(){
       //   var name = document.getElementById('nameInput').value.trim();
       //   var selectedChips = [];
@@ -943,8 +981,15 @@
 
         var contact = document.getElementById('contactInput').value.trim();
 
+        // var choiceElement = document.querySelector('input[name="choice"]:checked');
+        // var choice2 = choiceElement ? choiceElement.value : "";
+
+        // var choice = choiceElement ? choiceElement.value : "";
         var choiceElement = document.querySelector('input[name="choice"]:checked');
-        var choice = choiceElement ? choiceElement.value : "";
+var choice = choiceElement ? choiceElement.value : "";
+
+var choice2Element = document.querySelector('input[name="choice2"]:checked');
+var choice2 = choice2Element ? choice2Element.value : "";
 
         console.log("Answers:", lines);
 
@@ -963,6 +1008,7 @@
             q3: answers[2] || "",
             quizResult: quizBadge || "",
             try1: choice,
+            try2: choice2,
             contact:contact,
             // try1 : [contact, choice].join(" | "),
             source: "FiberUs Website"
